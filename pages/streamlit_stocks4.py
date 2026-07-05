@@ -1,12 +1,3 @@
-import streamlit as st
-import altair as alt
-import pandas as pd
-import numpy as np
-import plotly.express as px
-from datetime import date
-from Data import Data
-
-
 stocks = Data('resources/tech10_2.csv')
 
 def line_with_annotation(df):
