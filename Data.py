@@ -5,6 +5,7 @@ class Data:
 	RISK_FREE_RATE = 0.04
 	START_DATE = '2025-05-01'
 	END_DATE = '2026-05-01'
+	DEFAULT_COLUMN = ['SPY','AAPL', 'GOOGL','NVDA','AMD']
 	
 	def __init__(self, path: str):
 		# add a _ before attribute so you don't mistakenly edit it
@@ -23,6 +24,9 @@ class Data:
 	# None or "hello" = "hello"
 	# or return the first truthy
 	# and return the first falsy
+	def get_stock_price(self, start_date=None, end_date=None, columns=None):
+		return self._df.loc[start_date or self.START_DATE: end_date or END_DATE, columns or self.columns]
+
 
 	def get_daily_return(self, start_date=None, end_date=None, columns=None):
 		cls_ = type(self)
@@ -56,6 +60,25 @@ class Data:
 		#print(df)
 		
 		return df
+
+	def get_portfolio(self, start_date=START_DATE, end_date=END_DATE, columns=DEFAULT_COLUMN, shares=None):
+		
+		df0 = self.get_stock_price(start_date=start_date,end_date=end_date,columns=columns)
+		if shares is None:
+			shares = np.ones(len(columns))
+		investment = df0.head(1).T.reset_index().iloc[:,1] * shares
+		total = round(sum(investment),2)
+
+		profit = df0.tail(1).T.reset_index().iloc[:,1] * shares
+		total2 = round(sum(profit), 2)
+		change = ((profit - investment) / investment * 100).round(2).astype(str) + "%"
+		
+		return round(investment,2), total, total2, profit, change
+
+
+
+
+
 
 
 if __name__ == "__main__":
