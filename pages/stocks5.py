@@ -199,36 +199,44 @@ with sec1:
 
     st.line_chart(stocks.get_daily_return(start_date = start_date, end_date= end_date,columns=selected_tickers))
 
+
+with sec2:
     st.write(f'### Stocks Cumulative Returns')
     line_with_annotation2(stocks.get_cumulative_return(start_date = start_date, end_date= end_date,columns=selected_tickers))
     st.write(f'#### {selected_tickers} cumulative returns: {stocks.get_cumulative_return(start_date = start_date, end_date= end_date,columns=selected_tickers).iloc[-1].values}')
 
-
     st.write(f'### Stocks Daily Return Volatility')
     fig = px.box(stocks.get_daily_return(start_date = start_date, end_date= end_date,columns=selected_tickers))
     st.plotly_chart(fig, theme='streamlit')
+   
+    # st.write(f'### Sharpe Ratio')
+    # st.bar_chart(stocks.sharpe_ratio(start_date = start_date, end_date= end_date,columns=selected_tickers))
+    # st.latex(r"\text{Sharpe Ratio} = \frac{R_p - R_f}{\sigma_p}")
+    # st.markdown("""
+    # **Where:**
+    # - \(R_p\) = Portfolio return
+    # - \(R_f\) = Risk-free rate
+    # - \(\sigma_p\) = Standard deviation (volatility) of returns
+    # """)
 
-with sec2:
-
-    st.write(f'### Sharpe Ratio')
-    st.bar_chart(stocks.sharpe_ratio(start_date = start_date, end_date= end_date,columns=selected_tickers))
-    st.latex(r"\text{Sharpe Ratio} = \frac{R_p - R_f}{\sigma_p}")
-    st.markdown("""
-    **Where:**
-    - \(R_p\) = Portfolio return
-    - \(R_f\) = Risk-free rate
-    - \(\sigma_p\) = Standard deviation (volatility) of returns
-    """)
-
-    st.write(f'### Sortino ratio')
-    st.bar_chart(stocks.sortino_ratio(start_date = start_date, end_date= end_date,columns=selected_tickers))
-    st.latex(r"\text{Sortino Ratio} = \frac{R_p - R_f}{\sigma_d}")
-    st.markdown("""
-    **Where:**
-    - \(R_p\) = Portfolio return
-    - \(R_f\) = Risk-free rate
-    - \(\sigma_d\) = Downside deviation
-    """)
+    # st.write(f'### Sortino ratio')
+    # st.bar_chart(stocks.sortino_ratio(start_date = start_date, end_date= end_date,columns=selected_tickers))
+    # st.latex(r"\text{Sortino Ratio} = \frac{R_p - R_f}{\sigma_d}")
+    # st.markdown("""
+    # **Where:**
+    # - \(R_p\) = Portfolio return
+    # - \(R_f\) = Risk-free rate
+    # - \(\sigma_d\) = Downside deviation
+    # """)
+    
+    sharpe = stocks.sharpe_ratio(start_date = start_date, end_date= end_date,columns=selected_tickers)
+    sortino = stocks.sortino_ratio(start_date = start_date, end_date= end_date,columns=selected_tickers)
+    sharpe_df = pd.DataFrame({
+        'Sharpe':sharpe,
+        'Sortino':sortino
+        })
+    st.write('### Sharpe vs Sortino Ratio')
+    st.bar_chart(sharpe_df)
 
     st.write(f'### Beta Value')
     st.bar_chart(stocks.get_beta())
