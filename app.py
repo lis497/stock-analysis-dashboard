@@ -29,4 +29,4 @@ st.image(
 
 #if st.button("🚀 Enter Dashboard"):
     #st.switch_page("pages/streamlit_stocks4.py")
-st.page_link("pages/streamlit_stocks4.py", label="🚀 Enter Dashboard")
+st.page_link("pages/stocks5.py", label="🚀 Enter Dashboard")
